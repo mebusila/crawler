@@ -10,6 +10,18 @@ class RunningException(Exception):
 
 class Lock(object):
 
+    def exists(self):
+        raise NotImplemented
+
+    def create(self):
+        raise NotImplemented
+
+    def delete(self):
+        raise NotImplemented
+
+
+class FileLock(Lock):
+
     __filename = None
 
     def __init__(self, filename):
@@ -40,11 +52,14 @@ class Lock(object):
 
 class Running(object):
 
-    def __init__(self):
-        try:
-            self.__lock = Lock(self.__lock_filename)
-        except AttributeError:
-            pass
+    def __init__(self, lock=None):
+        if isinstance(lock, Lock):
+            self.__lock = lock
+        else:
+            try:
+                self.__lock = FileLock(self.__lock_filename)
+            except AttributeError:
+                pass
         if not self.can_run():
             raise RunningException
 
