@@ -60,8 +60,9 @@ class Running(object):
                 self.__lock = FileLock(self.__lock_filename)
             except AttributeError:
                 pass
-        if not self.can_run():
-            raise RunningException
+        
+        if self.can_run() is False:
+             raise RunningException
 
     def can_run(self):
         try:
@@ -70,3 +71,4 @@ class Running(object):
         except AttributeError:
             return True
         return False
+
