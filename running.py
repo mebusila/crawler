@@ -10,13 +10,16 @@ class RunningException(Exception):
 
 class Lock(object):
 
+    def __del__(self):
+        self.remove()
+
     def exists(self):
         raise NotImplemented
 
     def create(self):
         raise NotImplemented
 
-    def delete(self):
+    def remove(self):
         raise NotImplemented
 
 
@@ -26,9 +29,6 @@ class FileLock(Lock):
 
     def __init__(self, filename):
         self.__filename = filename
-
-    def __del__(self):
-        self.delete()
 
     def create(self):
         try:
@@ -46,7 +46,7 @@ class FileLock(Lock):
             return False
         return True
 
-    def delete(self):
+    def remove(self):
         os.unlink(self.__filename)
 
 
