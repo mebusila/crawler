@@ -72,3 +72,5 @@ class Running(object):
             return True
         return False
 
+    def done_running(self):
+        return self.__lock.remove()
