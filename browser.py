@@ -10,3 +10,6 @@ class Browser(object):
         self.__proxy = proxy
         self.__user_agent = user_agent
         self.__logger = logger
+
+    def download(self, url=None):
+        pass

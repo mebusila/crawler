@@ -73,4 +73,8 @@ class Running(object):
         return False
 
     def done_running(self):
-        return self.__lock.remove()
+        self.__lock.remove()
+        self.die()
+
+    def die(self):
+        pass
