@@ -10,9 +10,6 @@ class RunningException(Exception):
 
 class Lock(object):
 
-    def __del__(self):
-        self.remove()
-
     def exists(self):
         raise NotImplemented
 
@@ -53,6 +50,7 @@ class FileLock(Lock):
 class Running(object):
 
     def __init__(self, lock=None):
+        self.__lock_filename = "%s.pid" % self.__class__.__name__
         if isinstance(lock, Lock):
             self.__lock = lock
         else:
@@ -62,7 +60,7 @@ class Running(object):
                 pass
         
         if self.can_run() is False:
-             raise RunningException
+            raise RunningException
 
     def can_run(self):
         try:

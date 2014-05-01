@@ -36,6 +36,8 @@ class Scrapper(threading.Thread):
                 except KeyError:
                     continue
 
+            self.__logger.info("task done: %s" % url)
+
             self.__queue.task_done()
 
     def is_valid_url(self, url=None):

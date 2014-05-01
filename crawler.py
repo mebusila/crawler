@@ -25,11 +25,12 @@ class Crawler(Running):
         else:
             self.__browser = Browser(logger=self.__logger)
         self.__scrape_queue = queue.Queue()
-        self.__scrapper = scrapper
+        if scrapper is None:
+            self.__scrapper = Scrapper
+        else:
+            self.__scrapper = scrapper
 
     def start(self, url=None):
-        if not self.can_run():
-            return self.done_running()
         return self.run(url=url)
 
     def run(self, url=None):
@@ -44,10 +45,7 @@ class Crawler(Running):
 
         if not self.__scrape_queue.empty():
             for i in range(5):
-                if self.__scrapper is None:
-                    scrapper = Scrapper(self.__scrape_queue, self.__browser, self.__logger)
-                else:
-                    scrapper = self.__scrapper(self.__scrape_queue, self.__browser, self.__logger)
+                scrapper = self.__scrapper(self.__scrape_queue, self.__browser, self.__logger)
                 scrapper.daemon = True
                 scrapper.start()
             self.__scrape_queue.join()
@@ -81,13 +79,13 @@ class Crawler(Running):
     def download(self, url=None):
         return self.__browser.download(url)
 
-    def set_links_xpath(self, xpath=None):
+    def set_links_xpath(self, xpath):
         self.__links_xpath = xpath
 
     def get_links_xpath(self):
         return self.__links_xpath
 
-    def set_next_url_xpath(self, xpath=None):
+    def set_next_url_xpath(self, xpath):
         self.__next_url_xpath = xpath
 
     def get_next_url_xpath(self):
